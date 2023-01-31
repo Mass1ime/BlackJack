@@ -34,19 +34,19 @@
         Random random = new Random();
         cardP[deckP] = random.Next(2, 14);
         mastP[deckP] = random.Next(0, 3);
-        Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T") + mast[mastP[deckP]]);
+        Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastP[deckP]]);
         calc(deckP, 1);
         deckP++;
         cardP[deckP] = random.Next(2, 14);
         mastP[deckP] = random.Next(0, 3);
-        Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T") + mast[mastP[deckP]]);
+        Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastP[deckP]]);
         calc(deckP, 1);
 
         if (21 != pScore)
         {
             cardD[deckD] = random.Next(2, 14);
             mastD[deckD] = random.Next(0, 3);
-            Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T") + mast[mastD[deckD]]);
+            Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastD[deckD]]);
             calc(deckD, 2);
             deckD++;
             cardD[deckD] = random.Next(2, 14);
@@ -63,7 +63,7 @@
                 deckP++;
                 cardP[deckP] = random.Next(2, 14);
                 mastP[deckP] = random.Next(0, 3);
-                Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T") + mast[mastP[deckP]]);
+                Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastP[deckP]]);
                 calc(deckP, 1);
                 if (pScore > 21)
                 {
@@ -75,15 +75,17 @@
                 pasP = true;
                 break;
             }
-            while (dScore < 17)
-            {
-                deckD++;
-                cardD[deckD] = random.Next(2, 14);
-                mastD[deckD] = random.Next(0, 3);
-                calc(deckD, 2);
-            }
         }
-
+        Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastD[deckD]]);
+        while (dScore < 17)
+        {
+            deckD++;
+            cardD[deckD] = random.Next(2, 14);
+            mastD[deckD] = random.Next(0, 3);
+            Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastD[deckD]]);
+            calc(deckD, 2);
+        }
+ 
         if (pScore > 21)
         {
             Console.WriteLine("You lose!");
