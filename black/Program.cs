@@ -12,6 +12,7 @@
     bool pasP = false;
     int acesP = 0;
     int acesD = 0;
+    int gm = 1;
 
     public static void Main()
     {
@@ -22,11 +23,23 @@
     public void Oger()
     {
         Start();
-        Console.WriteLine("Continue? (y/n)");
-        string game = Console.ReadLine();
-        if (game == "y")
+        while(gm == 1)
         {
-            Oger();
+            Console.WriteLine("Continue? (y/n)");
+            string game = Console.ReadLine();
+            if (game == "y" || game == "Y")
+                {
+                    Oger();
+                }
+            else if (game == "n" || game == "N")
+            {
+                gm = 0;
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Fuck you => Y and N");
+            }
         }
     }
     public void Start()
@@ -41,7 +54,6 @@
         mastP[deckP] = random.Next(0, 3);
         Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastP[deckP]]);
         calc(deckP, 1);
-
         if (21 != pScore)
         {
             cardD[deckD] = random.Next(2, 14);
@@ -53,12 +65,11 @@
             mastD[deckP] = random.Next(0, 3);
             calc(deckD, 2);
         }
-
         while (pScore < 21 || !pasP)
         {
             Console.WriteLine("Do you want to draw a card? (y/n)");
             string answer = Console.ReadLine();
-            if (answer == "y")
+            if (answer == "y"|| answer == "Y")
             {
                 deckP++;
                 cardP[deckP] = random.Next(2, 14);
@@ -70,10 +81,14 @@
                     break;
                 }
             }
-            else
+            else if (answer == "n" || answer == "N")
             {
                 pasP = true;
                 break;
+            }
+            else
+            {
+                Console.WriteLine("Fuck you => Y and N");
             }
         }
         Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastD[deckD]]);
@@ -85,7 +100,6 @@
             Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastD[deckD]]);
             calc(deckD, 2);
         }
- 
         if (pScore > 21)
         {
             Console.WriteLine("You lose!");
@@ -117,7 +131,6 @@
         dScore = 0;
         acesP = 0;
         acesD = 0;
-
     }
     public void calc(int id, int cid)
     {
