@@ -1,14 +1,17 @@
-﻿using System;
-
-public class Program
+﻿public class Program
 {
-    public int[] cardP = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+    public int[] cardP = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public int[] cardD = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public string[] mast = { "♠;", "♥", "♦", "♣" };
+    public int[] mastP = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public int[] mastD = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     public int deckP = 1;
     public int deckD = 1;
-    public int[] cardD = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
     int pScore = 0;
     int dScore = 0;
     bool pasP = false;
+    int acesP = 0;
+    int acesD = 0;
 
     public static void Main()
     {
@@ -16,7 +19,7 @@ public class Program
         Program foo = new Program();
         foo.Oger();
     }
-    public void Oger() 
+    public void Oger()
     {
         Start();
         Console.WriteLine("Continue? (y/n)");
@@ -30,17 +33,26 @@ public class Program
     {
         Random random = new Random();
         cardP[deckP] = random.Next(2, 14);
-        Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T"));
+        mastP[deckP] = random.Next(0, 3);
+        Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T") + mast[mastP[deckP]]);
         calc(deckP, 1);
-        cardD[deckD] = random.Next(2, 14);
-        calc(deckD, 2);
         deckP++;
         cardP[deckP] = random.Next(2, 14);
-        Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T"));
+        mastP[deckP] = random.Next(0, 3);
+        Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T") + mast[mastP[deckP]]);
         calc(deckP, 1);
-        deckD++;
-        cardD[deckD] = random.Next(2, 14);
-        calc(deckD, 2);
+
+        if (21 != pScore)
+        {
+            cardD[deckD] = random.Next(2, 14);
+            mastD[deckD] = random.Next(0, 3);
+            Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T") + mast[mastD[deckD]]);
+            calc(deckD, 2);
+            deckD++;
+            cardD[deckD] = random.Next(2, 14);
+            mastD[deckP] = random.Next(0, 3);
+            calc(deckD, 2);
+        }
 
         while (pScore < 21 || !pasP)
         {
@@ -50,7 +62,8 @@ public class Program
             {
                 deckP++;
                 cardP[deckP] = random.Next(2, 14);
-                Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T"));
+                mastP[deckP] = random.Next(0, 3);
+                Console.WriteLine("You card: " + cardP[deckP].ToString().Replace("11", "D").Replace("12", "V").Replace("13", "K").Replace("14", "T") + mast[mastP[deckP]]);
                 calc(deckP, 1);
                 if (pScore > 21)
                 {
@@ -62,13 +75,13 @@ public class Program
                 pasP = true;
                 break;
             }
-        }
-
-        while (dScore < 18)
-        {
-            deckD++;
-            cardD[deckD] = random.Next(2, 14);
-            calc(deckD, 2);
+            while (dScore < 17)
+            {
+                deckD++;
+                cardD[deckD] = random.Next(2, 14);
+                mastD[deckD] = random.Next(0, 3);
+                calc(deckD, 2);
+            }
         }
 
         if (pScore > 21)
@@ -87,6 +100,10 @@ public class Program
         {
             Console.WriteLine("You lose!");
         }
+        else if (deckP == 2 && pScore == 21)
+        {
+
+        }
         else
         {
             Console.WriteLine("It's a tie!");
@@ -94,6 +111,10 @@ public class Program
         Console.WriteLine("You Score: " + pScore + ". Diler Score: " + dScore);
         deckP = 1;
         deckD = 1;
+        pScore = 0;
+        dScore = 0;
+        acesP = 0;
+        acesD = 0;
 
     }
     public void calc(int id, int cid)
@@ -102,17 +123,26 @@ public class Program
         {
             if (cardP[id] == 11 || cardP[id] == 12 || cardP[id] == 13)
             {
-                cardP[id] = 10;
+                pScore += 10;
             }
-            if (cardP[id] == 14 && pScore + 11 > 21)
+            else if (cardP[id] == 14 && pScore + 11 > 21)
             {
-                cardP[id] = 1;
+                pScore += 1;
+                if (acesP != 0)
+                {
+                    pScore -= acesP * 10;
+                    acesP = 0;
+                }
             }
-            if (cardP[id] == 14 && pScore + 11 <= 21)
+            else if (cardP[id] == 14 && pScore + 11 <= 21)
             {
-                cardP[id] = 11;
+                pScore += 11;
+                acesP += 1;
             }
-            pScore += cardP[id];
+            else
+            {
+                pScore += cardP[id];
+            }
             if (id >= 2)
             {
                 Console.WriteLine("You Score: " + pScore);
@@ -122,17 +152,26 @@ public class Program
         {
             if (cardD[id] == 11 || cardD[id] == 12 || cardD[id] == 13)
             {
-                cardD[id] = 10;
+                dScore += 10;
             }
-            if (cardD[id] == 14 && dScore + 11 > 21)
+            else if (cardD[id] == 14 && dScore + 11 > 21)
             {
-                cardD[id] = 1;
+                dScore += 1;
+                if (acesD != 0)
+                {
+                    dScore -= acesD * 10;
+                    acesD = 0;
+                }
             }
-            if (cardD[id] == 14 && dScore + 11 <= 21)
+            else if (cardD[id] == 14 && dScore + 11 <= 21)
             {
-                cardD[id] = 11;
+                dScore += 11;
+                acesD += 1;
             }
-            dScore += cardD[id];
+            else
+            {
+                dScore += cardD[id];
+            }
         }
     }
 }
