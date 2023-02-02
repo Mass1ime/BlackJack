@@ -1,10 +1,10 @@
 ﻿public class Program
 {
-    public int[] cardP = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    public int[] cardD = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public int[] cardP = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public int[] cardD = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     public string[] mast = { "♠;", "♥", "♦", "♣" };
-    public int[] mastP = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    public int[] mastD = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public int[] mastP = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    public int[] mastD = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     public int deckP = 1;
     public int deckD = 1;
     int pScore = 0;
@@ -92,37 +92,72 @@
             }
         }
         Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastD[deckD]]);
-        while (dScore < 17)
+        if (pScore < 21)
         {
-            deckD++;
-            cardD[deckD] = random.Next(2, 14);
-            mastD[deckD] = random.Next(0, 3);
-            Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastD[deckD]]);
-            calc(deckD, 2);
+            while (dScore < 17)
+            {
+                deckD++;
+                cardD[deckD] = random.Next(2, 14);
+                mastD[deckD] = random.Next(0, 3);
+                Console.WriteLine("Diller card: " + cardD[deckD].ToString().Replace("11", "J").Replace("12", "Q").Replace("13", "K").Replace("14", "A") + mast[mastD[deckD]]);
+                calc(deckD, 2);
+            }
         }
-        if (pScore > 21)
-        {
-            Console.WriteLine("You lose!");
-        }
-        else if (dScore > 21)
-        {
-            Console.WriteLine("You win!");
-        }
-        else if (pScore > dScore)
-        {
-            Console.WriteLine("You win!");
-        }
-        else if (pScore < dScore)
+        string ds = "";
+        if (pScore > 21 || pScore < dScore && dScore <= 21)
         {
             Console.WriteLine("You lose!");
+            if (pScore < 21)
+            {
+                int tempd;
+                for (int i = 1; i <= deckD; i++)
+                {
+                    for (int j = i + 1; j <= deckD; j++)
+                    {
+                        if (cardD[i] > cardD[j])
+                        {
+                            tempd = cardD[i];
+                            cardD[i] = cardD[j];
+                            cardD[j] = tempd;
+                        }
+                    }
+                }
+                for (int i = 1; i <= deckD; i++)
+                {
+                    ds += "_" + cardD[i].ToString();
+                }
+                stats(ds, 2);
+            }
         }
-        else if (deckP == 2 && pScore == 21)
+        else if (dScore > 21 || pScore > dScore && pScore <= 21 || deckP == 2 && pScore == 21)
         {
-
+            Console.WriteLine("You win!");
+            int tempp;
+            for (int i = 1; i <= deckP; i++)
+            {
+                for (int j = i + 1; j <= deckP; j++)
+                {
+                    if (cardP[i] > cardP[j])
+                    {
+                        tempp = cardP[i];
+                        cardP[i] = cardP[j];
+                        cardP[j] = tempp;
+                    }
+                }
+            }
+            for (int i = 1; i <= deckP; i++)
+            {
+                ds += "_" + cardP[i].ToString();
+            }
+            stats(ds, 1);
         }
-        else
+        else if (pScore == dScore)
         {
             Console.WriteLine("It's a tie!");
+        }
+        else 
+        {
+            Console.WriteLine("Error Game");
         }
         Console.WriteLine("You Score: " + pScore + ". Diler Score: " + dScore);
         deckP = 1;
@@ -140,19 +175,29 @@
             {
                 pScore += 10;
             }
-            else if (cardP[id] == 14 && pScore + 11 > 21)
+            else if (cardP[id] == 14)
             {
-                pScore += 1;
-                if (acesP != 0)
+                if (pScore + 11 <= 21)
                 {
-                    pScore -= acesP * 10;
-                    acesP = 0;
+                    pScore += 11;
+                    acesP++;
                 }
-            }
-            else if (cardP[id] == 14 && pScore + 11 <= 21)
-            {
-                pScore += 11;
-                acesP += 1;
+                else if (pScore + 11 > 21)
+                {
+                    if(acesP == 0)
+                    {
+                        pScore += 1;
+                    }
+                    else if (acesP > 0 && pScore + 1 <= 21)
+                    {
+                        pScore += 1;
+                    }
+                    else if (acesP > 0 && pScore + 1 > 21)
+                    {
+                        acesP--;
+                        pScore -= 9;
+                    }
+                }
             }
             else
             {
@@ -169,23 +214,64 @@
             {
                 dScore += 10;
             }
-            else if (cardD[id] == 14 && dScore + 11 > 21)
+            else if (cardD[id] == 14)
             {
-                dScore += 1;
-                if (acesD != 0)
+                if (dScore + 11 <= 21)
                 {
-                    dScore -= acesD * 10;
-                    acesD = 0;
+                    dScore += 11;
+                    acesD++;
                 }
-            }
-            else if (cardD[id] == 14 && dScore + 11 <= 21)
-            {
-                dScore += 11;
-                acesD += 1;
+                else if (dScore + 11 > 21)
+                {
+                    if (acesD == 0)
+                    {
+                        dScore += 1;
+                    }
+                    else if (acesD > 0 && dScore + 1 <= 21)
+                    {
+                        dScore += 1;
+                    }
+                    else if (acesD > 0 && dScore + 1 > 21)
+                    {
+                        acesD--;
+                        dScore -= 9;
+                    }
+                }
             }
             else
             {
                 dScore += cardD[id];
+            }
+        }
+    }
+    public void stats(string name, int cid)
+    {
+        if (cid == 1)
+        {
+            var InI = new INI.IniFile("Player.ini");
+            try
+            {
+                var nInI = Int32.Parse(InI.Read(name, "BlackJack"));
+                nInI++;
+                InI.Write(name, nInI.ToString(), "BlackJack");
+            }
+            catch
+            {
+                InI.Write(name, "1", "BlackJack");
+            }
+        }
+        else if (cid == 2)
+        {
+            var InI = new INI.IniFile("Diler.ini");
+            try
+            {
+                var nInI = Int32.Parse(InI.Read(name, "BlackJack"));
+                nInI++;
+                InI.Write(name, nInI.ToString(), "BlackJack");
+            }
+            catch
+            {
+                InI.Write(name, "1", "BlackJack");
             }
         }
     }
